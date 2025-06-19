@@ -9,8 +9,8 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Simonetta', serif;
-      background: linear-gradient(to bottom right, #e3e3e3, #bfbfbf);
-      padding-top: 130px;
+      background: linear-gradient(to bottom left, #cfcfcf, #f5f5f5);
+      min-height: 100vh;
     }
     header.fixo {
       background: linear-gradient(to right, #00e3e3, #005bac);
@@ -60,7 +60,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 2rem;
-      padding: 2rem;
+      padding: 160px 2rem 2rem;
     }
     .produto {
       width: 200px;
@@ -85,27 +85,16 @@
       margin-top: 0.5rem;
       font-size: 1.1rem;
     }
-    .rodape {
+    .rodape, .rodape-login {
       background: linear-gradient(to right, #00e3e3, #005bac);
-      color: white;
       text-align: center;
+      color: white;
       padding: 1rem;
-      position: relative;
-      bottom: 0;
+      font-size: 0.9rem;
       width: 100%;
     }
-
     #pagina-cliente, #pagina-login {
       display: none;
-    }
-
-    /* Tela de login com estilo do esboço */
-    #pagina-login {
-      background: linear-gradient(to bottom left, #cfcfcf, #f5f5f5);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
     .login-conteudo {
       display: flex;
@@ -136,6 +125,7 @@
       padding: 2rem;
       display: none;
       flex-direction: column;
+      align-items: center;
       gap: 1rem;
       color: white;
       width: 300px;
@@ -143,6 +133,7 @@
     #form-login label {
       font-size: 1.2rem;
       font-weight: bold;
+      align-self: flex-start;
     }
     #form-login input {
       padding: 0.5rem;
@@ -150,19 +141,12 @@
       border: none;
       outline: none;
       font-size: 1rem;
-    }
-    .rodape-login {
-      background: linear-gradient(to right, #00e3e3, #005bac);
-      text-align: center;
-      color: white;
-      padding: 1rem;
-      font-size: 0.9rem;
+      width: 100%;
     }
   </style>
 </head>
 <body>
 
-<!-- Faixa azul topo -->
 <header class="fixo">
   <img src="minhalogo.png" class="logo" alt="Logo" />
   <div class="topo-direita">
@@ -175,7 +159,7 @@
   </div>
 </header>
 
-<!-- Loja -->
+<!-- Página da loja -->
 <div id="pagina-cliente">
   <div id="galeria-produtos" class="galeria"></div>
   <footer class="rodape">
@@ -183,8 +167,8 @@
   </footer>
 </div>
 
-<!-- Tela de Login -->
-<div id="pagina-login">
+<!-- Página de Login -->
+<div id="pagina-login" style="display:none;">
   <div class="login-conteudo">
     <button class="botao-login" onclick="entrarComoCliente()">Sou cliente</button>
     <button class="botao-login" onclick="mostrarForm()">Sou administrador</button>
@@ -203,9 +187,9 @@
 
 <script>
   const produtos = [
-    { nome: "Caneca Corinthians (tipo 1)", imagem: "imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.jpg", precoOriginal: 30, precoPromocional: 25 },
-    { nome: "Caneca Flamengo (tipo 4)", imagem: "imagens/canecas/flamengo/tipo1/caneca-flamengo-tipo4-img1.jpg", precoOriginal: 30, precoPromocional: 25 },
-    { nome: "Caneca Fortaleza (tipo 1)", imagem: "imagens/canecas/fortaleza/tipo1/caneca-fortaleza-tipo1-img1.jpg", precoOriginal: 30, precoPromocional: 25 }
+    { nome: "Caneca Corinthians (tipo1)", imagem: "imagens/canecas/corinthians/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 },
+    { nome: "Caneca Flamengo (tipo1)", imagem: "imagens/canecas/flamengo/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 },
+    { nome: "Caneca Fortaleza (tipo1)", imagem: "imagens/canecas/fortaleza/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 }
   ];
   let produtosRepetidos = [];
   for (let i = 0; i < 4; i++) produtosRepetidos.push(...produtos);
@@ -258,5 +242,6 @@
   }
   window.onload = () => entrarComoCliente();
 </script>
+
 </body>
 </html>

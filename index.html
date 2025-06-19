@@ -5,87 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Photo & Arts</title>
   <link href="https://fonts.googleapis.com/css2?family=Simonetta:ital,wght@0,400;1,700&display=swap" rel="stylesheet">
-
   <style>
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Simonetta', serif;
       background: linear-gradient(to bottom right, #e3e3e3, #bfbfbf);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      padding-top: 110px;
     }
-    header {
+    header.fixo {
       background: linear-gradient(to right, #20b2aa, #005bac);
       color: white;
-      text-align: center;
       padding: 1rem;
-      font-size: 0.95rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
     }
-    header img {
-      max-height: 70px;
-      margin-right: 1rem;
-    }
-    .container {
-      flex-grow: 1;
+    .logo { height: 70px; }
+    .topo-direita {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      padding: 2rem;
-    }
-    .botao-login {
-      background-color: #4b64ff;
-      color: white;
-      font-weight: bold;
-      font-size: 1.5rem;
-      border: none;
-      border-radius: 25px;
-      padding: 1rem 2.5rem;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s;
-    }
-    .botao-login:hover {
-      background-color: #3749c1;
-      transform: scale(1.05);
-    }
-    #form-login {
-      background: #4b64ff;
-      border-radius: 30px;
-      padding: 2rem;
-      display: none;
-      flex-direction: column;
       gap: 1rem;
-      color: white;
-      width: 300px;
     }
-    #form-login label {
-      font-size: 1.2rem;
-      font-weight: bold;
+    .busca-wrapper {
+      position: relative;
     }
-    #form-login input {
-      padding: 0.5rem;
+    #campo-pesquisa {
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
       border-radius: 20px;
       border: none;
-      outline: none;
       font-size: 1rem;
     }
-    .rodape {
-      background: linear-gradient(to right, #20b2aa, #005bac);
-      text-align: center;
-      padding: 1rem;
-      color: white;
-      font-size: 0.9rem;
+    .lupa-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 20px;
+      cursor: pointer;
     }
-    #pagina-cliente {
-      display: none;
+    .icone-carrinho,
+    .icone-login {
+      height: 30px;
+      cursor: pointer;
     }
     .galeria {
       display: flex;
@@ -116,94 +82,48 @@
       cursor: pointer;
       margin-top: 0.5rem;
     }
-    .busca {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .busca input {
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      border: none;
-      font-size: 1rem;
+    #pagina-cliente, #pagina-login {
+      display: none;
     }
   </style>
 </head>
 <body>
-
-  <!-- Área de login -->
-  <div id="tela-login">
-    <header>
-      <img src="minhalogo.png" alt="Logo Photo & Arts" />
-      <div>Fale conosco: (85) 9.8701-4326 / Instagram: @photo.arts.grafica</div>
-    </header>
-
-    <div class="container">
-      <button class="botao-login" onclick="entrarComoCliente()">Sou cliente</button>
-      <button class="botao-login" onclick="mostrarLogin()">Sou administrador</button>
-
-      <div id="form-login">
-        <label for="login">Login:</label>
-        <input type="text" id="login" placeholder="Digite o login" />
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" placeholder="Digite a senha" />
-        <button class="botao-login" style="font-size: 1.1rem;" onclick="fazerLogin()">Entrar</button>
-      </div>
+<header class="fixo">
+  <img src="minhalogo.png" class="logo" alt="Logo" />
+  <div class="topo-direita">
+    <div class="busca-wrapper">
+      <input type="text" id="campo-pesquisa" placeholder="Pesquisar produto..." />
+      <img src="lupa.png" class="lupa-icon" onclick="executarBusca()" alt="Lupa" />
     </div>
+    <img src="carrinho.png" class="icone-carrinho" alt="Carrinho" />
+    <img src="login.png" class="icone-login" onclick="voltarLogin()" alt="Login" title="Login" />
+  </div>
+</header>
 
-    <div class="rodape">
-      Trabalhe conosco &nbsp;|&nbsp; Política de reembolso &nbsp;|&nbsp; Sobre nós
+<div id="pagina-cliente"><div id="galeria-produtos" class="galeria"></div></div>
+
+<div id="pagina-login">
+  <div style="display:flex; flex-direction:column; align-items:center; margin-top:100px; gap:1rem;">
+    <button onclick="entrarComoCliente()">Sou cliente</button>
+    <button onclick="mostrarForm()">Sou administrador</button>
+    <div id="form-login" style="display:none; flex-direction:column; gap:0.5rem;">
+      <input type="text" id="login" placeholder="Login"/>
+      <input type="password" id="senha" placeholder="Senha"/>
+      <button onclick="fazerLogin()">Entrar</button>
     </div>
   </div>
-
-  <!-- Página da loja -->
-  <div id="pagina-cliente">
-    <header>
-      <img src="minhalogo.png" alt="Logo" />
-      <div class="busca">
-        <input type="text" id="campo-pesquisa" placeholder="Pesquise o produto por nome" oninput="filtrarProdutos()">
-        <span style="font-size: 1.4rem;">🔍</span>
-        <div style="font-size: 1.5rem; cursor: pointer;">🛒<span style="font-size: 0.9rem;">0</span></div>
-      </div>
-    </header>
-
-    <div id="galeria-produtos" class="galeria"></div>
-
-    <footer class="rodape">
-      Trabalhe conosco &nbsp;|&nbsp; Política de reembolso &nbsp;|&nbsp; Sobre nós
-    </footer>
-  </div>
+</div>
 
 <script>
-  // Produtos simulados
   const produtos = [
-    {
-      nome: "Caneca Corinthians (tipo1)",
-      imagem: "imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.jpg",
-      precoOriginal: 30,
-      precoPromocional: 25
-    },
-    {
-      nome: "Caneca Flamengo (tipo1)",
-      imagem: "imagens/canecas/flamengo/tipo1/caneca-flamengo-tipo4-img1.jpg",
-      precoOriginal: 30,
-      precoPromocional: 25
-    },
-    {
-      nome: "Caneca Fortaleza (tipo1)",
-      imagem: "imagens/canecas/fortaleza/tipo1/caneca-fortaleza-tipo1-img1.jpg",
-      precoOriginal: 30,
-      precoPromocional: 25
-    }
+    { nome: "Caneca Corinthians (tipo1)", imagem: "imagens/canecas/corinthians/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 },
+    { nome: "Caneca Flamengo (tipo1)", imagem: "imagens/canecas/flamengo/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 },
+    { nome: "Caneca Fortaleza (tipo1)", imagem: "imagens/canecas/fortaleza/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 }
   ];
-
-  const galeria = document.getElementById("galeria-produtos");
   let produtosRepetidos = [];
-  for (let i = 0; i < 4; i++) {
-    produtosRepetidos.push(...produtos);
-  }
-
+  for (let i = 0; i < 4; i++) produtosRepetidos.push(...produtos);
   function carregarProdutos() {
+    const galeria = document.getElementById("galeria-produtos");
     galeria.innerHTML = "";
     produtosRepetidos.forEach(prod => {
       galeria.innerHTML += `
@@ -216,36 +136,40 @@
       `;
     });
   }
-
-  function filtrarProdutos() {
-    const termo = document.getElementById("campo-pesquisa").value.toLowerCase();
+  function executarBusca() {
+    const campo = document.getElementById("campo-pesquisa");
+    const termo = campo.value.toLowerCase().trim();
+    if (termo === "") return;
     const cards = document.querySelectorAll("#galeria-produtos .produto");
     produtosRepetidos.forEach((prod, i) => {
-      const visivel = prod.nome.toLowerCase().includes(termo);
-      cards[i].style.display = visivel ? "block" : "none";
+      cards[i].style.display = prod.nome.toLowerCase().includes(termo) ? "block" : "none";
     });
   }
-
-  function mostrarLogin() {
-    document.getElementById("form-login").style.display = "flex";
-  }
-
-  function fazerLogin() {
-    const usuario = document.getElementById("login").value;
-    const senha = document.getElementById("senha").value;
-    if (usuario === "Admin" && senha === "Admin321") {
-      alert("Login bem-sucedido! (área admin ainda será feita)");
-    } else {
-      alert("Login ou senha incorretos.");
-    }
-  }
-
+  document.getElementById("campo-pesquisa").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") executarBusca();
+  });
   function entrarComoCliente() {
-    document.getElementById("tela-login").style.display = "none";
+    document.getElementById("pagina-login").style.display = "none";
     document.getElementById("pagina-cliente").style.display = "block";
     carregarProdutos();
   }
+  function voltarLogin() {
+    document.getElementById("pagina-login").style.display = "block";
+    document.getElementById("pagina-cliente").style.display = "none";
+  }
+  function mostrarForm() {
+    document.getElementById("form-login").style.display = "flex";
+  }
+  function fazerLogin() {
+    const user = document.getElementById("login").value;
+    const senha = document.getElementById("senha").value;
+    if (user === "Admin" && senha === "Admin321") {
+      alert("Login de administrador efetuado! (Painel será feito)");
+    } else {
+      alert("Login incorreto.");
+    }
+  }
+  window.onload = () => entrarComoCliente();
 </script>
-
 </body>
 </html>

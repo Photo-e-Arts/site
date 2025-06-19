@@ -1,247 +1,818 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Photo & Arts</title>
-  <link href="https://fonts.googleapis.com/css2?family=Simonetta:ital,wght@0,400;1,700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Simonetta', serif;
-      background: linear-gradient(to bottom left, #cfcfcf, #f5f5f5);
-      min-height: 100vh;
-    }
-    header.fixo {
-      background: linear-gradient(to right, #00e3e3, #005bac);
-      color: white;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 999;
-    }
-    .logo {
-      height: 80px;
-    }
-    .topo-direita {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .busca-wrapper {
-      position: relative;
-    }
-    #campo-pesquisa {
-      padding: 0.5rem 2.5rem 0.5rem 1rem;
-      border-radius: 20px;
-      border: none;
-      font-size: 1rem;
-    }
-    .lupa-icon {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 20px;
-      cursor: pointer;
-    }
-    .icone-carrinho,
-    .icone-login {
-      height: 30px;
-      cursor: pointer;
-    }
-    .galeria {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      padding: 160px 2rem 2rem;
-    }
-    .produto {
-      width: 200px;
-      background: #d0ffff;
-      border-radius: 20px;
-      padding: 1rem;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    .produto img {
-      width: 100%;
-      border-radius: 12px;
-    }
-    .produto button {
-      background: linear-gradient(to right, #4b64ff, #6d88ff);
-      color: white;
-      border: none;
-      border-radius: 15px;
-      padding: 0.5rem 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
-    }
-    .rodape, .rodape-login {
-      background: linear-gradient(to right, #00e3e3, #005bac);
-      text-align: center;
-      color: white;
-      padding: 1rem;
-      font-size: 0.9rem;
-      width: 100%;
-    }
-    #pagina-cliente, #pagina-login {
-      display: none;
-    }
-    .login-conteudo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 150px;
-      gap: 1.5rem;
-    }
-    .botao-login {
-      background-color: #4b64ff;
-      color: white;
-      font-weight: bold;
-      font-size: 1.5rem;
-      border: none;
-      border-radius: 25px;
-      padding: 1rem 2.5rem;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s;
-      width: 300px;
-    }
-    .botao-login:hover {
-      background-color: #3749c1;
-      transform: scale(1.05);
-    }
-    #form-login {
-      background: #4b64ff;
-      border-radius: 30px;
-      padding: 2rem;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      color: white;
-      width: 300px;
-    }
-    #form-login label {
-      font-size: 1.2rem;
-      font-weight: bold;
-      align-self: flex-start;
-    }
-    #form-login input {
-      padding: 0.5rem;
-      border-radius: 20px;
-      border: none;
-      outline: none;
-      font-size: 1rem;
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
+// src/main.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
 
-<header class="fixo">
-  <img src="minhalogo.png" class="logo" alt="Logo" />
-  <div class="topo-direita">
-    <div class="busca-wrapper">
-      <input type="text" id="campo-pesquisa" placeholder="Pesquise o produto por nome" />
-      <img src="lupa.png" class="lupa-icon" onclick="executarBusca()" alt="Lupa" />
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+
+// src/App.jsx
+import React from 'react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Produto from './pages/Produto';
+import Carrinho from './pages/Carrinho';
+import Admin from './pages/Admin';
+import Layout from './components/Layout';
+
+function App() {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/produto/:id" element={<Produto />} />
+          <Route path="/carrinho" element={<Carrinho />} />
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      </Layout>
+    </Router>
+  );
+}
+
+export default App;
+
+
+// src/components/Layout.jsx
+import React from 'react';
+import Header from './Header';
+import Footer from './Footer';
+import './Layout.css';
+
+const Layout = ({ children }) => {
+  return (
+    <div className="layout">
+      <Header />
+      <main>{children}</main>
+      <Footer />
     </div>
-    <img src="carrinho.png" class="icone-carrinho" alt="Carrinho" />
-    <img src="login.png" class="icone-login" onclick="voltarLogin()" alt="Login" title="Login" />
-  </div>
-</header>
+  );
+};
 
-<!-- Página da loja -->
-<div id="pagina-cliente">
-  <div id="galeria-produtos" class="galeria"></div>
-  <footer class="rodape">
-    Trabalhe conosco &nbsp;|&nbsp; Política de reembolso &nbsp;|&nbsp; Sobre nós
-  </footer>
-</div>
+export default Layout;
 
-<!-- Página de Login -->
-<div id="pagina-login" style="display:none;">
-  <div class="login-conteudo">
-    <button class="botao-login" onclick="entrarComoCliente()">Sou cliente</button>
-    <button class="botao-login" onclick="mostrarForm()">Sou administrador</button>
-    <div id="form-login">
-      <label for="login">Login:</label>
-      <input type="text" id="login" placeholder="Digite o login" />
-      <label for="senha">Senha:</label>
-      <input type="password" id="senha" placeholder="Digite a senha" />
-      <button class="botao-login" style="font-size: 1.1rem;" onclick="fazerLogin()">Entrar</button>
+
+// src/components/Header.jsx
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Header.css';
+
+const Header = () => {
+  return (
+    <header className="header">
+      <div className="header-left">
+        <Link to="/">
+          <img src="/imagens/logo.png" alt="Logo" className="logo" />
+        </Link>
+      </div>
+      <div className="header-center">
+        <input type="text" placeholder="Pesquise o produto por nome" className="search-bar" />
+        <img src="/imagens/icones/lupa.png" alt="Buscar" className="search-icon" />
+      </div>
+      <div className="header-right">
+        <Link to="/login">
+          <img src="/imagens/icones/login.png" alt="Login" className="icon" />
+        </Link>
+        <Link to="/carrinho">
+          <img src="/imagens/icones/carrinho.png" alt="Carrinho" className="icon" />
+          <span className="cart-count">0</span>
+        </Link>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+
+// src/components/Footer.jsx
+import React from 'react';
+import './Footer.css';
+
+const Footer = () => {
+  return (
+    <footer className="footer">
+      <ul>
+        <li>Trabalhe conosco</li>
+        <li>Política de reembolso</li>
+        <li>Sobre nós</li>
+      </ul>
+    </footer>
+  );
+};
+
+export default Footer;
+/* Continuação - Parte 2 de X: CSS e página inicial */
+
+// src/components/Header.css
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0077cc;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.header-left .logo {
+  height: 60px;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  margin: 0 20px;
+}
+
+.search-bar {
+  padding: 8px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+  border: none;
+  background-color: #eee;
+}
+
+.search-icon {
+  width: 24px;
+  margin-left: -30px;
+  cursor: pointer;
+}
+
+.header-right .icon {
+  width: 30px;
+  margin-left: 20px;
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+
+// src/components/Footer.css
+.footer {
+  background-color: #0077cc;
+  padding: 15px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: white;
+}
+
+.footer ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.footer li {
+  cursor: pointer;
+}
+
+
+// src/components/Layout.css
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 80px;
+  padding-bottom: 60px;
+  background-image: url('/imagens/fundo.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+
+// src/pages/Home.jsx
+import React from 'react';
+import './Home.css';
+import { Link } from 'react-router-dom';
+
+const produtos = Array.from({ length: 32 }, (_, index) => ({
+  id: index + 1,
+  nome: `Caneca Corinthians (tipo1)`,
+  preco: 25,
+  precoOriginal: 30,
+  imagem: `/imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.png`
+}));
+
+const Home = () => {
+  return (
+    <div className="home-container">
+      <div className="sidebar">{/* Lado esquerdo fixo para promoções */}</div>
+      <div className="produtos-container">
+        {produtos.map((produto, index) => (
+          <div key={index} className="produto-card">
+            <img src={produto.imagem} alt={produto.nome} className="produto-imagem" />
+            <h3>{produto.nome}</h3>
+            <p className="preco-original">R$ {produto.precoOriginal.toFixed(2)}</p>
+            <p className="preco-final">R$ {produto.preco.toFixed(2)}</p>
+            <Link to={`/produto/${produto.id}`} className="botao-comprar">
+              <img src="/imagens/icones/comprar.png" alt="Comprar" />
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-  <div class="rodape-login">
-    Trabalhe conosco &nbsp;|&nbsp; Política de reembolso &nbsp;|&nbsp; Sobre nós
-  </div>
-</div>
+  );
+};
 
-<script>
-  const produtos = [
-    { nome: "Caneca Corinthians (tipo1)", imagem: "imagens/canecas/corinthians/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 },
-    { nome: "Caneca Flamengo (tipo1)", imagem: "imagens/canecas/flamengo/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 },
-    { nome: "Caneca Fortaleza (tipo1)", imagem: "imagens/canecas/fortaleza/tipo1/imagem1.jpg", precoOriginal: 30, precoPromocional: 25 }
-  ];
-  let produtosRepetidos = [];
-  for (let i = 0; i < 4; i++) produtosRepetidos.push(...produtos);
-  function carregarProdutos() {
-    const galeria = document.getElementById("galeria-produtos");
-    galeria.innerHTML = "";
-    produtosRepetidos.forEach(prod => {
-      galeria.innerHTML += `
-        <div class="produto">
-          <img src="${prod.imagem}" alt="${prod.nome}">
-          <p>${prod.nome}</p>
-          <p><del>R$ ${prod.precoOriginal},00</del><br><strong>R$ ${prod.precoPromocional},00</strong></p>
-          <button>Comprar</button>
+export default Home;
+
+
+// src/pages/Home.css
+.home-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: white;
+  min-height: 100%;
+  margin-right: 20px;
+  padding: 20px;
+  position: sticky;
+  top: 80px;
+}
+
+.produtos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  flex: 1;
+}
+
+.produto-card {
+  background-color: #c0f0ff;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.produto-card:hover {
+  transform: scale(1.02);
+}
+
+.produto-imagem {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.preco-original {
+  text-decoration: line-through;
+  font-size: 14px;
+  color: #777;
+  margin: 0;
+}
+
+.preco-final {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.botao-comprar img {
+  width: 100px;
+  margin-top: 5px;
+}
+/* Continuação - Parte 3 de X: Página do Produto */
+
+// src/pages/Produto.jsx
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import './Produto.css';
+
+const imagensMock = [
+  '/imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.png',
+  '/imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.png',
+  '/imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.png'
+];
+
+const Produto = () => {
+  const { id } = useParams();
+  const [quantidade, setQuantidade] = useState(1);
+  const [imagemSelecionada, setImagemSelecionada] = useState(0);
+  const estoque = 999;
+
+  const aumentar = () => {
+    if (quantidade < estoque) setQuantidade(quantidade + 1);
+  };
+
+  const diminuir = () => {
+    if (quantidade > 1) setQuantidade(quantidade - 1);
+  };
+
+  const produto = {
+    nome: 'Caneca Corinthians (tipo1)',
+    preco: 25,
+    precoOriginal: 30,
+    descricao: 'Caneca branca de cerâmica, impressão sublimática em alta qualidade para presente.',
+    imagens: imagensMock
+  };
+
+  return (
+    <div className="produto-page">
+      <div className="imagem-principal">
+        <img src={produto.imagens[imagemSelecionada]} alt="Produto" className="grande" />
+        <button onClick={() => setImagemSelecionada((imagemSelecionada - 1 + produto.imagens.length) % produto.imagens.length)}>
+          ◀
+        </button>
+        <button onClick={() => setImagemSelecionada((imagemSelecionada + 1) % produto.imagens.length)}>
+          ▶
+        </button>
+      </div>
+      <div className="info-produto">
+        <h2>{produto.nome}</h2>
+        <p className="preco-final">R$ {produto.preco.toFixed(2)} <span className="preco-original">R$ {produto.precoOriginal.toFixed(2)}</span></p>
+        <p className="descricao">{produto.descricao}</p>
+
+        <div className="quantidade-estoque">
+          <div className="quantidade">
+            <button onClick={diminuir}>-</button>
+            <input type="text" value={quantidade} readOnly />
+            <button onClick={aumentar}>+</button>
+          </div>
+          <span className="estoque">Estoque: {estoque}</span>
         </div>
-      `;
-    });
-  }
-  function executarBusca() {
-    const campo = document.getElementById("campo-pesquisa");
-    const termo = campo.value.toLowerCase().trim();
-    if (termo === "") return;
-    const cards = document.querySelectorAll("#galeria-produtos .produto");
-    produtosRepetidos.forEach((prod, i) => {
-      cards[i].style.display = prod.nome.toLowerCase().includes(termo) ? "block" : "none";
-    });
-  }
-  document.getElementById("campo-pesquisa").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") executarBusca();
-  });
-  function entrarComoCliente() {
-    document.getElementById("pagina-login").style.display = "none";
-    document.getElementById("pagina-cliente").style.display = "block";
-    carregarProdutos();
-  }
-  function voltarLogin() {
-    document.getElementById("pagina-login").style.display = "block";
-    document.getElementById("pagina-cliente").style.display = "none";
-  }
-  function mostrarForm() {
-    document.getElementById("form-login").style.display = "flex";
-  }
-  function fazerLogin() {
-    const user = document.getElementById("login").value;
-    const senha = document.getElementById("senha").value;
-    if (user === "Admin" && senha === "Admin321") {
-      alert("Login de administrador efetuado! (Painel será feito)");
-    } else {
-      alert("Login incorreto.");
-    }
-  }
-  window.onload = () => entrarComoCliente();
-</script>
 
-</body>
-</html>
+        <div className="botoes-produto">
+          <button className="adicionar"><img src="/imagens/icones/adicionaraocarrinho.png" alt="Adicionar" /></button>
+          <button className="comprar"><img src="/imagens/icones/compraragora.png" alt="Comprar" /></button>
+        </div>
+
+        <div className="miniaturas">
+          {produto.imagens.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              className={`miniatura ${index === imagemSelecionada ? 'ativa' : ''}`}
+              onClick={() => setImagemSelecionada(index)}
+              alt={`Miniatura ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Produto;
+
+
+// src/pages/Produto.css
+.produto-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: #c0f0ff;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.imagem-principal {
+  flex: 1 1 350px;
+  position: relative;
+  text-align: center;
+}
+
+.imagem-principal img.grande {
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.imagem-principal button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.imagem-principal button:first-of-type {
+  left: 0;
+}
+
+.imagem-principal button:last-of-type {
+  right: 0;
+}
+
+.info-produto {
+  flex: 1 1 300px;
+}
+
+.preco-final {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.preco-original {
+  font-size: 14px;
+  text-decoration: line-through;
+  color: #777;
+  margin-left: 10px;
+}
+
+.descricao {
+  margin: 10px 0;
+}
+
+.quantidade-estoque {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.quantidade button {
+  width: 30px;
+  height: 30px;
+}
+
+.quantidade input {
+  width: 40px;
+  text-align: center;
+}
+
+.botoes-produto {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.botoes-produto button img {
+  width: 150px;
+}
+
+.miniaturas {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.miniatura {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.miniatura.ativa {
+  border-color: #0077cc;
+}
+/* Continuação - Parte 4 de X: Página de Login e Cadastro */
+
+// src/pages/Login.jsx
+import React, { useState } from 'react';
+import './Login.css';
+
+const Login = () => {
+  const [modoCadastro, setModoCadastro] = useState(false);
+
+  return (
+    <div className="login-container">
+      {!modoCadastro ? (
+        <div className="login-box">
+          <h2>Login</h2>
+          <input type="text" placeholder="Email ou usuário" />
+          <input type="password" placeholder="Senha" />
+          <img src="/imagens/icones/esqueceuasenha.png" alt="Esqueceu a senha" className="botao-esqueci" />
+          <img src="/imagens/icones/entrar.png" alt="Entrar" className="botao-entrar" />
+          <button className="trocar-modo" onClick={() => setModoCadastro(true)}>Cadastrar</button>
+        </div>
+      ) : (
+        <div className="cadastro-box">
+          <h2>Cadastro</h2>
+          <input type="text" placeholder="Nome" />
+          <input type="text" placeholder="Sobrenome" />
+          <input type="email" placeholder="Email" />
+          <input type="password" placeholder="Senha" />
+          <input type="password" placeholder="Confirmar senha" />
+          <img src="/imagens/icones/entrar.png" alt="Cadastrar" className="botao-entrar" />
+          <button className="trocar-modo" onClick={() => setModoCadastro(false)}>Voltar para login</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Login;
+
+
+// src/pages/Login.css
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 30px;
+}
+
+.login-box,
+.cadastro-box {
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.login-box h2,
+.cadastro-box h2 {
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.botao-esqueci,
+.botao-entrar {
+  width: 180px;
+  cursor: pointer;
+}
+
+.trocar-modo {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #0077cc;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+}
+/* Continuação - Parte 5 de X: Página do Carrinho */
+
+// src/pages/Carrinho.jsx
+import React, { useState } from 'react';
+import './Carrinho.css';
+
+const produtosCarrinhoMock = [
+  {
+    id: 1,
+    nome: 'Caneca Corinthians (tipo1)',
+    preco: 25,
+    quantidade: 2,
+    imagem: '/imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.png'
+  },
+  {
+    id: 2,
+    nome: 'Caneca Fortaleza (tipo1)',
+    preco: 30,
+    quantidade: 1,
+    imagem: '/imagens/canecas/fortaleza/tipo1/caneca-fortaleza-tipo1-img1.png'
+  }
+];
+
+const Carrinho = () => {
+  const [produtos, setProdutos] = useState(produtosCarrinhoMock);
+  const [selecionados, setSelecionados] = useState(produtos.map(p => p.id));
+
+  const toggleSelecionado = (id) => {
+    setSelecionados(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const removerProduto = (id) => {
+    setProdutos(produtos.filter(p => p.id !== id));
+    setSelecionados(selecionados.filter(i => i !== id));
+  };
+
+  const total = produtos
+    .filter(p => selecionados.includes(p.id))
+    .reduce((acc, p) => acc + p.preco * p.quantidade, 0);
+
+  return (
+    <div className="carrinho-container">
+      <h2>Seu carrinho</h2>
+      {produtos.map((produto) => (
+        <div key={produto.id} className="item-carrinho">
+          <input
+            type="checkbox"
+            checked={selecionados.includes(produto.id)}
+            onChange={() => toggleSelecionado(produto.id)}
+          />
+          <img src={produto.imagem} alt={produto.nome} className="img-carrinho" />
+          <div className="info-item">
+            <h4>{produto.nome}</h4>
+            <p>R$ {produto.preco.toFixed(2)} x {produto.quantidade}</p>
+            <div className="acoes-item">
+              <button>
+                <img src="/imagens/icones/compraragora.png" alt="Comprar Agora" />
+              </button>
+              <button onClick={() => removerProduto(produto.id)}>
+                <img src="/imagens/icones/remover.png" alt="Remover" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+      <div className="resumo-carrinho">
+        <h3>Total: R$ {total.toFixed(2)}</h3>
+        <button className="continuar-compra">
+          <img src="/imagens/icones/continuarcompra.png" alt="Continuar Compra" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Carrinho;
+
+
+// src/pages/Carrinho.css
+.carrinho-container {
+  max-width: 900px;
+  margin: auto;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.item-carrinho {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.img-carrinho {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.info-item {
+  flex: 1;
+}
+
+.acoes-item {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.acoes-item button img {
+  width: 120px;
+  cursor: pointer;
+}
+
+.resumo-carrinho {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.continuar-compra img {
+  width: 200px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+      /* Continuação - Parte 6 de X: Página de Confirmação de Compra */
+
+// src/pages/ConfirmacaoCompra.jsx
+import React, { useState } from 'react';
+import './ConfirmacaoCompra.css';
+
+const ConfirmacaoCompra = () => {
+  const [dados, setDados] = useState({ nome: '', endereco: '', cep: '', pagamento: 'pix' });
+
+  const produtosSelecionados = [
+    { nome: 'Caneca Corinthians (tipo1)', preco: 25, quantidade: 2 },
+    { nome: 'Caneca Fortaleza (tipo1)', preco: 30, quantidade: 1 }
+  ];
+
+  const total = produtosSelecionados.reduce((acc, p) => acc + p.preco * p.quantidade, 0);
+
+  const handleChange = (e) => {
+    setDados({ ...dados, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <div className="confirmacao-container">
+      <h2>Confirmação da Compra</h2>
+
+      <div className="itens-compra">
+        {produtosSelecionados.map((item, index) => (
+          <div key={index} className="item-confirmacao">
+            <p>{item.nome}</p>
+            <p>Qtd: {item.quantidade}</p>
+            <p>R$ {(item.preco * item.quantidade).toFixed(2)}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3>Total: R$ {total.toFixed(2)}</h3>
+
+      <div className="formulario">
+        <input type="text" name="nome" placeholder="Nome completo" onChange={handleChange} />
+        <input type="text" name="endereco" placeholder="Endereço" onChange={handleChange} />
+        <input type="text" name="cep" placeholder="CEP" onChange={handleChange} />
+
+        <label>Forma de pagamento:</label>
+        <select name="pagamento" value={dados.pagamento} onChange={handleChange}>
+          <option value="pix">Pix</option>
+          <option value="credito">Cartão de Crédito</option>
+          <option value="debito">Cartão de Débito</option>
+          <option value="boleto">Boleto</option>
+        </select>
+
+        <button className="finalizar-button">
+          <img src="/imagens/icones/finalizarcompra.png" alt="Finalizar Compra" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ConfirmacaoCompra;
+
+
+// src/pages/ConfirmacaoCompra.css
+.confirmacao-container {
+  max-width: 900px;
+  margin: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.itens-compra {
+  margin-bottom: 20px;
+}
+
+.item-confirmacao {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  padding: 8px 0;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.formulario input,
+.formulario select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.finalizar-button img {
+  width: 200px;
+  margin-top: 10px;
+  cursor: pointer;
+}

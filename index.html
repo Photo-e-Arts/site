@@ -1362,3 +1362,101 @@ if (email === 'admin@grafica.com' && senha === 'admin123') {
 
 // redirecionamento pós-login será automático para página inicial
 // useAuth().usuario pode ser usado em qualquer parte do app para verificar o login
+/* Continuação - Parte 12 de X: Bloqueio de ações para quem não está logado (Adicionar ao carrinho e Comprar Agora) */
+
+// Exemplo de uso em ProdutoDetalhes.jsx ou ProdutoCard.jsx
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const ProdutoDetalhes = ({ produto }) => {
+  const { usuario } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAdicionarAoCarrinho = () => {
+    if (!usuario) {
+      navigate(`/login?redirect=/produto/${produto.id}`);
+      return;
+    }
+    alert(`Adicionado ao carrinho: ${produto.nome}`);
+  };
+
+  const handleComprarAgora = () => {
+    if (!usuario) {
+      navigate(`/login?redirect=/produto/${produto.id}`);
+      return;
+    }
+    navigate('/confirmacao-compra');
+  };
+
+  return (
+    <div className="produto-detalhes">
+      <img src={produto.img} alt={produto.nome} />
+      <h2>{produto.nome}</h2>
+      <p>R$ {produto.preco}</p>
+      <div className="botoes">
+        <button onClick={handleAdicionarAoCarrinho}>
+          <img src="/imagens/icones/adicionaraocarrinho.png" alt="Adicionar ao carrinho" />
+        </button>
+        <button onClick={handleComprarAgora}>
+          <img src="/imagens/icones/compraragora.png" alt="Comprar agora" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ProdutoDetalhes;
+
+
+// src/pages/Login.jsx (redirecionamento pós-login)
+import { useLocation } from 'react-router-dom';
+
+const location = useLocation();
+const redirect = new URLSearchParams(location.search).get('redirect') || '/';
+
+// dentro de handleLogin, após login bem-sucedido:
+login({ nome: 'Cliente', email, tipo: 'cliente' });
+navigate(redirect);
+
+
+// src/pages/Login.jsx completo usará isso para enviar o usuário de volta para a página original após o login
+// Ex: se clicar em "comprar" sem estar logado → vai pro login → após logar volta automaticamente para a página do produto
+/* Continuação - Parte 13 de X: Bloqueio no botão "Continuar compra" (Carrinho) para não logados */
+
+// Exemplo de uso em Carrinho.jsx
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const Carrinho = ({ itensSelecionados }) => {
+  const { usuario } = useAuth();
+  const navigate = useNavigate();
+
+  const handleContinuarCompra = () => {
+    if (!usuario) {
+      navigate(`/login?redirect=/carrinho`);
+      return;
+    }
+    navigate('/confirmacao-compra');
+  };
+
+  return (
+    <div className="carrinho-container">
+      {/* ... lista de itens ... */}
+
+      <div className="resumo-carrinho">
+        <p>Total: R$ {/* total calculado */}</p>
+        <button onClick={handleContinuarCompra}>
+          <img src="/imagens/icones/continuarcompra.png" alt="Continuar Compra" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Carrinho;
+
+
+// Já compatível com o redirecionamento pós-login (como feito no ProdutoDetalhes)
+// Se não estiver logado → redireciona para /login?redirect=/carrinho → depois volta pro carrinho automaticamente após o login

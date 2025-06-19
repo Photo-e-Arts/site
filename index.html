@@ -816,3 +816,549 @@ export default ConfirmacaoCompra;
   margin-top: 10px;
   cursor: pointer;
 }
+/* Continuação - Parte 7 de X: Página de Resumo da Compra */
+
+// src/pages/ResumoCompra.jsx
+import React from 'react';
+import './ResumoCompra.css';
+
+const ResumoCompra = () => {
+  const dadosCliente = {
+    nome: 'João da Silva',
+    endereco: 'Rua Exemplo, 123',
+    cep: '12345-678',
+    pagamento: 'Pix',
+    data: '19/06/2025',
+    hora: '15:32'
+  };
+
+  const itensComprados = [
+    { nome: 'Caneca Corinthians (tipo1)', quantidade: 2, preco: 25 },
+    { nome: 'Caneca Fortaleza (tipo1)', quantidade: 1, preco: 30 }
+  ];
+
+  const total = itensComprados.reduce((acc, item) => acc + item.preco * item.quantidade, 0);
+
+  return (
+    <div className="resumo-container">
+      <h2>Resumo da Compra</h2>
+
+      <div className="dados-cliente">
+        <p><strong>Nome:</strong> {dadosCliente.nome}</p>
+        <p><strong>Endereço:</strong> {dadosCliente.endereco}</p>
+        <p><strong>CEP:</strong> {dadosCliente.cep}</p>
+        <p><strong>Forma de pagamento:</strong> {dadosCliente.pagamento}</p>
+        <p><strong>Data:</strong> {dadosCliente.data}</p>
+        <p><strong>Hora:</strong> {dadosCliente.hora}</p>
+      </div>
+
+      <div className="itens-resumo">
+        <h3>Itens comprados:</h3>
+        {itensComprados.map((item, index) => (
+          <div key={index} className="item-resumo">
+            <p>{item.nome}</p>
+            <p>Qtd: {item.quantidade}</p>
+            <p>Total: R$ {(item.preco * item.quantidade).toFixed(2)}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3 className="total-final">Valor total: R$ {total.toFixed(2)}</h3>
+    </div>
+  );
+};
+
+export default ResumoCompra;
+
+
+// src/pages/ResumoCompra.css
+.resumo-container {
+  max-width: 800px;
+  margin: auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.dados-cliente p {
+  margin: 5px 0;
+}
+
+.itens-resumo {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 15px;
+}
+
+.item-resumo {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.total-final {
+  margin-top: 20px;
+  text-align: right;
+  font-size: 20px;
+  font-weight: bold;
+}
+/* Continuação - Parte 8 de X: Área do Perfil (Meu Perfil, Minhas Compras, Sair) */
+
+// src/pages/Perfil.jsx
+import React, { useState } from 'react';
+import './Perfil.css';
+
+const comprasMock = [
+  {
+    id: 1,
+    data: '12/06/2025',
+    hora: '14:00',
+    itens: [
+      { nome: 'Caneca Corinthians (tipo1)', quantidade: 1, preco: 25 },
+      { nome: 'Caneca Fortaleza (tipo1)', quantidade: 2, preco: 30 }
+    ]
+  },
+  {
+    id: 2,
+    data: '15/06/2025',
+    hora: '09:30',
+    itens: [
+      { nome: 'Caneca Flamengo (tipo4)', quantidade: 1, preco: 27 }
+    ]
+  }
+];
+
+const Perfil = () => {
+  const [aba, setAba] = useState('perfil');
+
+  return (
+    <div className="perfil-container">
+      <div className="menu-perfil">
+        <button onClick={() => setAba('perfil')}>Meu Perfil</button>
+        <button onClick={() => setAba('compras')}>Minhas Compras</button>
+        <button onClick={() => alert('Você saiu!')}>Sair</button>
+      </div>
+
+      <div className="conteudo-perfil">
+        {aba === 'perfil' && (
+          <div>
+            <h2>Informações do Usuário</h2>
+            <p><strong>Nome:</strong> João da Silva</p>
+            <p><strong>Email:</strong> joao@email.com</p>
+          </div>
+        )}
+
+        {aba === 'compras' && (
+          <div>
+            <h2>Histórico de Compras</h2>
+            {comprasMock.map((compra) => (
+              <div key={compra.id} className="compra-box">
+                <p><strong>Data:</strong> {compra.data} - <strong>Hora:</strong> {compra.hora}</p>
+                <ul>
+                  {compra.itens.map((item, index) => (
+                    <li key={index}>{item.nome} - Qtd: {item.quantidade} - R$ {(item.preco * item.quantidade).toFixed(2)}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Perfil;
+
+
+// src/pages/Perfil.css
+.perfil-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+.menu-perfil {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.menu-perfil button {
+  padding: 10px 15px;
+  border: none;
+  background: #0077cc;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.conteudo-perfil {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.compra-box {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.compra-box ul {
+  margin: 10px 0 0;
+  padding-left: 20px;
+}
+/* Continuação - Parte 9 de X: Página de Adicionar/Editar Produto (Administrador) */
+
+// src/pages/AdminProduto.jsx
+import React, { useState, useEffect } from 'react';
+import './AdminProduto.css';
+
+const AdminProduto = ({ modo = 'adicionar', produtoExistente = null }) => {
+  const [produto, setProduto] = useState({
+    nome: '',
+    preco: '',
+    descricao: '',
+    estoque: '',
+    imagens: []
+  });
+
+  useEffect(() => {
+    if (modo === 'editar' && produtoExistente) {
+      setProduto(produtoExistente);
+    }
+  }, [modo, produtoExistente]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProduto((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImagens = (e) => {
+    const files = Array.from(e.target.files);
+    setProduto((prev) => ({ ...prev, imagens: [...prev.imagens, ...files] }));
+  };
+
+  const handleSalvar = () => {
+    alert(`${modo === 'editar' ? 'Produto atualizado' : 'Produto adicionado'} com sucesso!`);
+    // Aqui entraria a lógica de salvar no banco de dados futuramente
+  };
+
+  return (
+    <div className="admin-produto-container">
+      <h2>{modo === 'editar' ? 'Editar Produto' : 'Adicionar Produto'}</h2>
+      <input
+        type="text"
+        name="nome"
+        placeholder="Nome do produto"
+        value={produto.nome}
+        onChange={handleChange}
+      />
+      <input
+        type="number"
+        name="preco"
+        placeholder="Preço"
+        value={produto.preco}
+        onChange={handleChange}
+      />
+      <textarea
+        name="descricao"
+        placeholder="Descrição do produto"
+        value={produto.descricao}
+        onChange={handleChange}
+      ></textarea>
+      <input
+        type="number"
+        name="estoque"
+        placeholder="Estoque"
+        value={produto.estoque}
+        onChange={handleChange}
+      />
+      <input
+        type="file"
+        multiple
+        onChange={handleImagens}
+        accept="image/*"
+      />
+      <div className="preview-imagens">
+        {produto.imagens.map((img, idx) => (
+          <div key={idx} className="imagem-preview">
+            <img src={URL.createObjectURL(img)} alt={`Preview ${idx}`} />
+          </div>
+        ))}
+      </div>
+      <button className="salvar-button" onClick={handleSalvar}>
+        <img src="/imagens/icones/salvaralteracoes.png" alt="Salvar" />
+      </button>
+    </div>
+  );
+};
+
+export default AdminProduto;
+
+
+// src/pages/AdminProduto.css
+.admin-produto-container {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.admin-produto-container input,
+.admin-produto-container textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.preview-imagens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.imagem-preview img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.salvar-button img {
+  width: 180px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+/* Continuação - Parte 10 de X: Botão de Opções (Editar/Excluir) para Administrador nos Produtos */
+
+// Exemplo de uso dentro do componente de produto (como ProdutoCard.jsx)
+
+import React, { useState } from 'react';
+import './ProdutoCard.css';
+
+const ProdutoCard = ({ produto, isAdmin }) => {
+  const [mostrarOpcoes, setMostrarOpcoes] = useState(false);
+
+  const handleEditar = () => {
+    // redirecionar para a tela de edição, enviando o produto
+    alert('Editar produto: ' + produto.nome);
+  };
+
+  const handleExcluir = () => {
+    if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+      alert('Produto excluído: ' + produto.nome);
+    }
+  };
+
+  return (
+    <div className="produto-card">
+      {isAdmin && (
+        <div className="opcoes-admin">
+          <img
+            src="/imagens/icones/opcoes.png"
+            alt="opções"
+            onClick={() => setMostrarOpcoes(!mostrarOpcoes)}
+          />
+          {mostrarOpcoes && (
+            <div className="menu-opcoes">
+              <button onClick={handleEditar}>Editar</button>
+              <button onClick={handleExcluir}>Excluir</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      <img className="imagem-produto" src={produto.img} alt={produto.nome} />
+      <p className="nome-produto">{produto.nome}</p>
+      <p className="preco-produto">R$ {produto.preco.toFixed(2)}</p>
+      <button className="botao-comprar">
+        <img src="/imagens/icones/comprar.png" alt="Comprar" />
+      </button>
+    </div>
+  );
+};
+
+export default ProdutoCard;
+
+
+// src/components/ProdutoCard.css
+.produto-card {
+  width: 200px;
+  background: #eaf1fc;
+  padding: 10px;
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imagem-produto {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.nome-produto,
+.preco-produto {
+  margin: 8px 0 0;
+  text-align: center;
+}
+
+.botao-comprar img {
+  width: 100px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.opcoes-admin {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.opcoes-admin img {
+  width: 20px;
+  cursor: pointer;
+}
+
+.menu-opcoes {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  z-index: 10;
+}
+
+.menu-opcoes button {
+  display: block;
+  background: none;
+  border: none;
+  color: #333;
+  padding: 5px 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-opcoes button:hover {
+  background: #eee;
+}
+/* Continuação - Parte 11 de X: Controle de Sessão (Login, Perfil e Redirecionamentos) */
+
+// src/context/AuthContext.jsx
+import React, { createContext, useState, useContext } from 'react';
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [usuario, setUsuario] = useState(null); // null ou { nome, email, tipo: 'admin' ou 'cliente' }
+
+  const login = (dadosUsuario) => {
+    setUsuario(dadosUsuario);
+  };
+
+  const logout = () => {
+    setUsuario(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ usuario, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => useContext(AuthContext);
+
+
+// src/components/Navbar.jsx (exemplo de uso)
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './Navbar.css';
+
+const Navbar = () => {
+  const navigate = useNavigate();
+  const { usuario, logout } = useAuth();
+
+  const handleLoginClick = () => {
+    if (usuario) {
+      navigate('/perfil');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  return (
+    <div className="navbar">
+      <div className="logo" onClick={() => navigate('/')}>MinhaGráfica</div>
+      <div className="busca">
+        <input type="text" placeholder="Buscar produtos..." />
+        <img src="/imagens/icones/lupa.png" alt="Buscar" />
+      </div>
+      <div className="icones">
+        <img
+          src={usuario ? "/imagens/icones/meuperfil.png" : "/imagens/icones/login.png"}
+          alt="Perfil/Login"
+          onClick={handleLoginClick}
+        />
+        <img
+          src="/imagens/icones/carrinho.png"
+          alt="Carrinho"
+          onClick={() => navigate('/carrinho')}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
+
+
+// src/main.jsx (envolvendo app com AuthProvider)
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import { AuthProvider } from './context/AuthContext';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </React.StrictMode>
+);
+
+
+// src/pages/Login.jsx (uso de login fictício)
+// ...dentro do handleLogin...
+if (email === 'admin@grafica.com' && senha === 'admin123') {
+  login({ nome: 'Administrador', email, tipo: 'admin' });
+  navigate('/');
+} else if (email === 'cliente@grafica.com' && senha === 'cliente123') {
+  login({ nome: 'Cliente', email, tipo: 'cliente' });
+  navigate('/');
+} else {
+  setErro('Login ou senha inválidos');
+}
+
+// redirecionamento pós-login será automático para página inicial
+// useAuth().usuario pode ser usado em qualquer parte do app para verificar o login

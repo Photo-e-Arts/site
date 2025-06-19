@@ -138,3 +138,92 @@
       }
     }
   </script>
+  <!-- Página inicial da loja -->
+<div id="pagina-cliente" style="display: none;">
+  <!-- Barra de navegação -->
+  <header style="background: linear-gradient(to right, #20b2aa, #005bac); color: white; padding: 1rem; display: flex; align-items: center; justify-content: space-between;">
+    <img src="minhalogo.png" alt="Logo" style="height: 60px;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <input type="text" id="campo-pesquisa" placeholder="Pesquise o produto por nome" oninput="filtrarProdutos()" style="padding: 0.5rem 1rem; border-radius: 20px; border: none; font-size: 1rem;">
+      <span style="font-size: 1.4rem;">🔍</span>
+      <div style="font-size: 1.5rem; cursor: pointer;">🛒<span style="font-size: 0.9rem;">0</span></div>
+    </div>
+  </header>
+
+  <!-- Galeria de produtos -->
+  <div id="galeria-produtos" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; padding: 2rem;">
+    <!-- Os produtos serão inseridos via JavaScript -->
+  </div>
+
+  <!-- Rodapé da loja -->
+  <footer style="background: linear-gradient(to right, #20b2aa, #005bac); color: white; text-align: center; padding: 1rem;">
+    Trabalhe conosco &nbsp;|&nbsp; Política de reembolso &nbsp;|&nbsp; Sobre nós
+  </footer>
+</div>
+
+<script>
+  // Array com os produtos simulados
+  const produtosLoja = [
+    {
+      nome: "Caneca Corinthians (tipo1)",
+      imagem: "imagens/canecas/corinthians/tipo1/imagem1.jpg",
+      precoOriginal: 30,
+      precoPromocional: 25
+    },
+    {
+      nome: "Caneca Flamengo (tipo1)",
+      imagem: "imagens/canecas/flamengo/tipo1/imagem1.jpg",
+      precoOriginal: 30,
+      precoPromocional: 25
+    },
+    {
+      nome: "Caneca Fortaleza (tipo1)",
+      imagem: "imagens/canecas/fortaleza/tipo1/imagem1.jpg",
+      precoOriginal: 30,
+      precoPromocional: 25
+    }
+  ];
+
+  // Repete os produtos para simular rolagem
+  const produtosRepetidos = [];
+  for (let i = 0; i < 4; i++) {
+    produtosRepetidos.push(...produtosLoja);
+  }
+
+  // Gera os cards de produto na galeria
+  function carregarProdutos() {
+    const galeria = document.getElementById("galeria-produtos");
+    galeria.innerHTML = "";
+    produtosRepetidos.forEach(prod => {
+      galeria.innerHTML += `
+        <div style="width: 200px; background: #e0f7fa; border-radius: 15px; padding: 1rem; text-align: center; box-shadow: 0 0 5px rgba(0,0,0,0.2);">
+          <img src="${prod.imagem}" alt="${prod.nome}" style="width: 100%; border-radius: 12px;">
+          <p style="margin: 0.5rem 0;">${prod.nome}</p>
+          <p><del>R$ ${prod.precoOriginal},00</del><br><strong>R$ ${prod.precoPromocional},00</strong></p>
+          <button style="background: #4b64ff; color: white; border: none; border-radius: 15px; padding: 0.5rem 1rem; font-weight: bold; cursor: pointer;">Comprar</button>
+        </div>
+      `;
+    });
+  }
+
+  // Filtro de pesquisa por nome
+  function filtrarProdutos() {
+    const termo = document.getElementById("campo-pesquisa").value.toLowerCase();
+    const cards = document.querySelectorAll("#galeria-produtos > div");
+    produtosRepetidos.forEach((prod, i) => {
+      const visivel = prod.nome.toLowerCase().includes(termo);
+      cards[i].style.display = visivel ? "block" : "none";
+    });
+  }
+
+  // Exibe a tela correta com base no hash da URL
+  function verificarHash() {
+    const hash = window.location.hash;
+    document.getElementById("pagina-cliente").style.display = (hash === "#cliente") ? "block" : "none";
+    if (hash === "#cliente") carregarProdutos();
+  }
+
+  // Detecta mudança de hash
+  window.addEventListener("hashchange", verificarHash);
+  verificarHash(); // executa ao carregar
+</script>

@@ -1460,3 +1460,240 @@ export default Carrinho;
 
 // Já compatível com o redirecionamento pós-login (como feito no ProdutoDetalhes)
 // Se não estiver logado → redireciona para /login?redirect=/carrinho → depois volta pro carrinho automaticamente após o login
+/* Continuação - Parte 14 de X: Página "Minhas Compras" com Histórico Consolidado */
+
+// src/pages/MinhasCompras.jsx
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import './MinhasCompras.css';
+
+const historicoMock = [
+  {
+    id: '001',
+    data: '17/06/2025 10:15',
+    itens: [
+      { nome: 'Caneca Fortaleza (tipo1)', qtd: 2, preco: 30 },
+      { nome: 'Caneca Corinthians (tipo1)', qtd: 1, preco: 25 }
+    ]
+  },
+  {
+    id: '002',
+    data: '19/06/2025 16:47',
+    itens: [
+      { nome: 'Caneca Flamengo (tipo4)', qtd: 1, preco: 27 }
+    ]
+  }
+];
+
+const MinhasCompras = () => {
+  const { usuario } = useAuth();
+
+  if (!usuario) {
+    return <p>Você precisa estar logado para visualizar suas compras.</p>;
+  }
+
+  return (
+    <div className="minhas-compras-container">
+      <h2>Minhas Compras</h2>
+      {historicoMock.map((compra) => (
+        <div key={compra.id} className="compra-box">
+          <p><strong>Compra #{compra.id}</strong></p>
+          <p><strong>Data:</strong> {compra.data}</p>
+          <ul>
+            {compra.itens.map((item, index) => (
+              <li key={index}>{item.nome} - Qtd: {item.qtd} - R$ {(item.preco * item.qtd).toFixed(2)}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default MinhasCompras;
+
+
+// src/pages/MinhasCompras.css
+.minhas-compras-container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.compra-box {
+  background: #f9f9f9;
+  margin-bottom: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.compra-box ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+/* Continuação - Parte 15 de X: Página "Meu Perfil" com dados e botão "Sair" */
+
+// src/pages/MeuPerfil.jsx
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import './MeuPerfil.css';
+
+const MeuPerfil = () => {
+  const { usuario, logout } = useAuth();
+
+  if (!usuario) {
+    return <p>Você precisa estar logado para acessar o perfil.</p>;
+  }
+
+  const handleSair = () => {
+    logout();
+    window.location.href = '/login';
+  };
+
+  return (
+    <div className="perfil-container">
+      <h2>Meu Perfil</h2>
+      <p><strong>Nome:</strong> {usuario.nome}</p>
+      <p><strong>Email:</strong> {usuario.email}</p>
+      <button className="botao-sair" onClick={handleSair}>Sair</button>
+    </div>
+  );
+};
+
+export default MeuPerfil;
+
+
+// src/pages/MeuPerfil.css
+.perfil-container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.perfil-container p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.botao-sair {
+  margin-top: 20px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.botao-sair:hover {
+  background-color: #c9302c;
+}
+/* Continuação - Parte 16 de X: Menu suspenso ao clicar em "meuperfil.png" (Meu Perfil / Minhas Compras / Sair) */
+
+// src/components/Navbar.jsx (atualizado)
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './Navbar.css';
+
+const Navbar = () => {
+  const navigate = useNavigate();
+  const { usuario, logout } = useAuth();
+  const [mostrarMenuPerfil, setMostrarMenuPerfil] = useState(false);
+
+  const handlePerfilClick = () => {
+    setMostrarMenuPerfil(!mostrarMenuPerfil);
+  };
+
+  const handleSair = () => {
+    logout();
+    navigate('/login');
+  };
+
+  return (
+    <div className="navbar">
+      <div className="logo" onClick={() => navigate('/')}>MinhaGráfica</div>
+      <div className="busca">
+        <input type="text" placeholder="Buscar produtos..." />
+        <img src="/imagens/icones/lupa.png" alt="Buscar" />
+      </div>
+      <div className="icones">
+        {!usuario ? (
+          <img
+            src="/imagens/icones/login.png"
+            alt="Login"
+            onClick={() => navigate('/login')}
+          />
+        ) : (
+          <div className="perfil-wrapper">
+            <img
+              src="/imagens/icones/meuperfil.png"
+              alt="Meu Perfil"
+              onClick={handlePerfilClick}
+            />
+            {mostrarMenuPerfil && (
+              <div className="menu-perfil">
+                <button onClick={() => navigate('/perfil')}>Meu Perfil</button>
+                <button onClick={() => navigate('/minhas-compras')}>Minhas Compras</button>
+                <button onClick={handleSair}>Sair</button>
+              </div>
+            )}
+          </div>
+        )}
+        <img
+          src="/imagens/icones/carrinho.png"
+          alt="Carrinho"
+          onClick={() => navigate('/carrinho')}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
+
+
+// src/components/Navbar.css (adição do menu perfil)
+.perfil-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.perfil-wrapper img {
+  width: 30px;
+  cursor: pointer;
+}
+
+.menu-perfil {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  z-index: 10;
+  min-width: 150px;
+}
+
+.menu-perfil button {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-perfil button:hover {
+  background-color: #f0f0f0;
+}

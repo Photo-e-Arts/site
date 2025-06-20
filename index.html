@@ -1957,3 +1957,146 @@ const produtosFake = [
 ];
 
 export default produtosFake;
+/* Continuação - Parte 20 de X: Paginação dos produtos (32 por página) com botões "1", "2", "3"... */
+
+// src/pages/PaginaInicial.jsx (atualizado com paginação)
+import React, { useState } from 'react';
+import ProdutoCard from '../components/ProdutoCard';
+import produtosFake from '../data/produtosFake';
+import './PaginaInicial.css';
+
+const ProdutosPorPagina = 32;
+
+const PaginaInicial = () => {
+  const [produtos, setProdutos] = useState(produtosFake);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+
+  const handleExcluirProduto = (id) => {
+    setProdutos((prev) => prev.filter((produto) => produto.id !== id));
+  };
+
+  const totalPaginas = Math.ceil(produtos.length / ProdutosPorPagina);
+
+  const produtosPaginados = produtos.slice(
+    (paginaAtual - 1) * ProdutosPorPagina,
+    paginaAtual * ProdutosPorPagina
+  );
+
+  const botoesPaginas = Array.from({ length: totalPaginas }, (_, i) => i + 1);
+
+  return (
+    <div>
+      <div className="produtos-container">
+        {produtosPaginados.map((produto) => (
+          <ProdutoCard
+            key={produto.id}
+            produto={produto}
+            onExcluir={handleExcluirProduto}
+          />
+        ))}
+      </div>
+
+      <div className="paginacao">
+        {botoesPaginas.map((num) => (
+          <button
+            key={num}
+            className={num === paginaAtual ? 'ativo' : ''}
+            onClick={() => setPaginaAtual(num)}
+          >
+            {num}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PaginaInicial;
+
+
+// src/pages/PaginaInicial.css (novo)
+.produtos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.paginacao {
+  text-align: center;
+  margin: 30px auto;
+  padding-bottom: 100px; /* para evitar sobrepor rodapé */
+}
+
+.paginacao button {
+  margin: 0 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.paginacao button.ativo {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+/* Continuação - Parte 21 de X: Prevenção de esticamento dos quadrados dos produtos ao dar zoom */
+
+// src/pages/PaginaInicial.css (ajustado)
+.produtos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Estilo fixo e responsivo para os cards de produto */
+.produto-card {
+  width: 220px;
+  min-width: 220px;
+  max-width: 220px;
+  height: 320px;
+  background-color: #f0f8ff;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.produto-card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.paginacao {
+  text-align: center;
+  margin: 30px auto;
+  padding-bottom: 100px;
+}
+
+.paginacao button {
+  margin: 0 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.paginacao button.ativo {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}

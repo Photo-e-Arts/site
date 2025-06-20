@@ -2230,3 +2230,181 @@ export default ConfirmacaoCompra;
   width: 160px;
   height: auto;
 }
+/* Continuação - Parte 23 de X: Página "Compra Realizada" com resumo da compra */
+
+// src/pages/CompraRealizada.jsx
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './CompraRealizada.css';
+
+const CompraRealizada = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const resumo = location.state?.resumo;
+
+  if (!resumo) {
+    return (
+      <div className="compra-container">
+        <h2>Nenhuma compra foi realizada.</h2>
+        <button onClick={() => navigate('/')}>Voltar para a loja</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="compra-container">
+      <h2>Compra Realizada com Sucesso!</h2>
+      <p><strong>Data:</strong> {resumo.data}</p>
+      <p><strong>Nome:</strong> {resumo.nome}</p>
+      <p><strong>Endereço:</strong> {resumo.endereco}</p>
+      <p><strong>CEP:</strong> {resumo.cep}</p>
+      <p><strong>Pagamento:</strong> {resumo.pagamento}</p>
+
+      <div className="itens-comprados">
+        <h3>Itens Comprados:</h3>
+        {resumo.itens.map((item, i) => (
+          <div key={i} className="item-compra">
+            <img src={item.img} alt={item.nome} />
+            <div>
+              <h4>{item.nome}</h4>
+              <p>Quantidade: {item.quantidade}</p>
+              <p>Subtotal: R$ {(item.preco * item.quantidade).toFixed(2)}</p>
+            </div>
+          </div>
+        ))}
+        <h3>Total Pago: R$ {resumo.total.toFixed(2)}</h3>
+      </div>
+
+      <button onClick={() => navigate('/')}>Voltar para a loja</button>
+    </div>
+  );
+};
+
+export default CompraRealizada;
+
+
+// src/pages/CompraRealizada.css
+.compra-container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.compra-container h2 {
+  color: #2c662d;
+  margin-bottom: 20px;
+}
+
+.itens-comprados {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.item-compra {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.item-compra img {
+  width: 60px;
+  height: auto;
+  object-fit: contain;
+}
+
+button {
+  margin-top: 30px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+/* Continuação - Parte 24 de X: Página "Minhas Compras" acessível pelo menu do perfil */
+
+// src/pages/MinhasCompras.jsx
+import React, { useEffect, useState } from 'react';
+import './MinhasCompras.css';
+
+// Simulação de histórico (dados fictícios para testes)
+const comprasMock = JSON.parse(localStorage.getItem('compras')) || [];
+
+const MinhasCompras = () => {
+  const [compras, setCompras] = useState(comprasMock);
+
+  useEffect(() => {
+    const atualizadas = JSON.parse(localStorage.getItem('compras')) || [];
+    setCompras(atualizadas);
+  }, []);
+
+  return (
+    <div className="minhas-compras-container">
+      <h2>Minhas Compras</h2>
+      {compras.length === 0 ? (
+        <p>Você ainda não realizou nenhuma compra.</p>
+      ) : (
+        compras.map((compra, index) => (
+          <div key={index} className="resumo-compra">
+            <h4>Compra em {compra.data}</h4>
+            <p><strong>Forma de pagamento:</strong> {compra.pagamento}</p>
+            {compra.itens.map((item, i) => (
+              <div key={i} className="item-historico">
+                <img src={item.img} alt={item.nome} />
+                <div>
+                  <p>{item.nome}</p>
+                  <p>Quantidade: {item.quantidade}</p>
+                  <p>Subtotal: R$ {(item.preco * item.quantidade).toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
+            <p><strong>Total:</strong> R$ {compra.total.toFixed(2)}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+};
+
+export default MinhasCompras;
+
+
+// src/pages/MinhasCompras.css
+.minhas-compras-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.resumo-compra {
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+.item-historico {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.item-historico img {
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+}

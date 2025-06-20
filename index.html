@@ -2100,3 +2100,133 @@ export default PaginaInicial;
   color: white;
   border-color: #007bff;
 }
+/* Continuação - Parte 22 de X: Página de Confirmação de Compra */
+
+// src/pages/ConfirmacaoCompra.jsx
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './ConfirmacaoCompra.css';
+
+const ConfirmacaoCompra = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const itensSelecionados = location.state?.itens || [];
+
+  const [dados, setDados] = useState({
+    nome: '',
+    endereco: '',
+    cep: '',
+    pagamento: 'pix'
+  });
+
+  const total = itensSelecionados.reduce((acc, item) => acc + item.preco * item.quantidade, 0);
+
+  const handleChange = (e) => {
+    setDados({ ...dados, [e.target.name]: e.target.value });
+  };
+
+  const finalizarCompra = () => {
+    const resumo = {
+      ...dados,
+      itens: itensSelecionados,
+      total,
+      data: new Date().toLocaleString()
+    };
+    navigate('/compra-realizada', { state: { resumo } });
+  };
+
+  return (
+    <div className="confirmacao-container">
+      <h2>Confirmar Compra</h2>
+
+      <div className="itens-lista">
+        {itensSelecionados.map((item, i) => (
+          <div key={i} className="item-confirmado">
+            <img src={item.img} alt={item.nome} />
+            <div>
+              <h4>{item.nome}</h4>
+              <p>Quantidade: {item.quantidade}</p>
+              <p>Preço: R$ {(item.preco * item.quantidade).toFixed(2)}</p>
+            </div>
+          </div>
+        ))}
+        <h3>Total: R$ {total.toFixed(2)}</h3>
+      </div>
+
+      <div className="formulario">
+        <input type="text" name="nome" placeholder="Nome completo" value={dados.nome} onChange={handleChange} required />
+        <input type="text" name="endereco" placeholder="Endereço" value={dados.endereco} onChange={handleChange} required />
+        <input type="text" name="cep" placeholder="CEP" value={dados.cep} onChange={handleChange} required />
+
+        <label>Forma de pagamento:</label>
+        <select name="pagamento" value={dados.pagamento} onChange={handleChange}>
+          <option value="pix">PIX</option>
+          <option value="credito">Cartão de Crédito</option>
+          <option value="debito">Cartão de Débito</option>
+          <option value="boleto">Boleto</option>
+        </select>
+
+        <button className="btn-finalizar" onClick={finalizarCompra}>
+          <img src="/imagens/icones/finalizarcompra.png" alt="Finalizar Compra" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ConfirmacaoCompra;
+
+
+// src/pages/ConfirmacaoCompra.css
+.confirmacao-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.itens-lista {
+  margin-bottom: 30px;
+}
+
+.item-confirmado {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.item-confirmado img {
+  width: 60px;
+  height: auto;
+  object-fit: contain;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.formulario input,
+.formulario select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn-finalizar {
+  margin-top: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.btn-finalizar img {
+  width: 160px;
+  height: auto;
+}

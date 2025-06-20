@@ -1697,3 +1697,263 @@ export default Navbar;
 .menu-perfil button:hover {
   background-color: #f0f0f0;
 }
+/* Continuação - Parte 17 de X: Página de Adicionar/Editar Produtos (somente para administrador) */
+
+// src/pages/AdminProduto.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './AdminProduto.css';
+
+const AdminProduto = () => {
+  const { usuario } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const modoEdicao = location.state?.produto || null;
+  const [nome, setNome] = useState(modoEdicao?.nome || '');
+  const [preco, setPreco] = useState(modoEdicao?.preco || '');
+  const [descricao, setDescricao] = useState(modoEdicao?.descricao || '');
+  const [estoque, setEstoque] = useState(modoEdicao?.estoque || '');
+  const [imagens, setImagens] = useState([]);
+
+  useEffect(() => {
+    if (!usuario || usuario.tipo !== 'admin') {
+      navigate('/');
+    }
+  }, [usuario, navigate]);
+
+  const handleImagemChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImagens(files);
+  };
+
+  const handleSalvar = (e) => {
+    e.preventDefault();
+    console.log('Produto salvo:', {
+      nome,
+      preco,
+      descricao,
+      estoque,
+      imagens
+    });
+    navigate('/');
+  };
+
+  return (
+    <div className="admin-produto-container">
+      <h2>{modoEdicao ? 'Editar Produto' : 'Adicionar Produto'}</h2>
+      <form onSubmit={handleSalvar}>
+        <label>Nome:</label>
+        <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} required />
+
+        <label>Preço:</label>
+        <input type="number" value={preco} onChange={(e) => setPreco(e.target.value)} required />
+
+        <label>Descrição:</label>
+        <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)} required />
+
+        <label>Estoque:</label>
+        <input type="number" value={estoque} onChange={(e) => setEstoque(e.target.value)} required />
+
+        <label>Imagens:</label>
+        <input type="file" multiple accept="image/*" onChange={handleImagemChange} />
+
+        <button type="submit">
+          <img src="/imagens/icones/salvaralteracoes.png" alt="Salvar" />
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default AdminProduto;
+
+
+// src/pages/AdminProduto.css
+.admin-produto-container {
+  max-width: 700px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.admin-produto-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-produto-container label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.admin-produto-container input,
+.admin-produto-container textarea {
+  margin-top: 5px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.admin-produto-container button {
+  margin-top: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.admin-produto-container button img {
+  width: 120px;
+  height: auto;
+}
+/* Continuação - Parte 18 de X: Botão de três pontinhos com opções de Editar e Excluir (visível apenas para admin) */
+
+// Exemplo de uso dentro do componente ProdutoCard.jsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './ProdutoCard.css';
+
+const ProdutoCard = ({ produto, onExcluir }) => {
+  const { usuario } = useAuth();
+  const navigate = useNavigate();
+  const [mostrarMenu, setMostrarMenu] = useState(false);
+
+  const handleEditar = () => {
+    navigate('/admin-produto', { state: { produto } });
+  };
+
+  const handleExcluir = () => {
+    if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+      onExcluir(produto.id);
+    }
+  };
+
+  return (
+    <div className="produto-card">
+      <img src={produto.img} alt={produto.nome} />
+      <h3>{produto.nome}</h3>
+      <p>R$ {produto.preco}</p>
+      <button className="botao-comprar">
+        <img src="/imagens/icones/comprar.png" alt="Comprar" />
+      </button>
+
+      {usuario?.tipo === 'admin' && (
+        <div className="admin-opcoes">
+          <img
+            src="/imagens/icones/opcoes.png"
+            alt="Opções"
+            className="icone-opcoes"
+            onClick={() => setMostrarMenu(!mostrarMenu)}
+          />
+          {mostrarMenu && (
+            <div className="menu-opcoes">
+              <button onClick={handleEditar}>Editar</button>
+              <button onClick={handleExcluir}>Excluir</button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ProdutoCard;
+
+
+// ProdutoCard.css (adicional)
+.admin-opcoes {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.icone-opcoes {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.menu-opcoes {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-opcoes button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-opcoes button:hover {
+  background-color: #f5f5f5;
+}
+/* Continuação - Parte 19 de X: Lógica de exclusão no componente que renderiza os produtos (Página Inicial ou Lista de Produtos) */
+
+// Exemplo de uso em src/pages/PaginaInicial.jsx
+import React, { useState } from 'react';
+import ProdutoCard from '../components/ProdutoCard';
+import produtosFake from '../data/produtosFake'; // array inicial de teste
+
+const PaginaInicial = () => {
+  const [produtos, setProdutos] = useState(produtosFake);
+
+  const handleExcluirProduto = (id) => {
+    setProdutos((prev) => prev.filter((produto) => produto.id !== id));
+  };
+
+  return (
+    <div className="produtos-container">
+      {produtos.map((produto) => (
+        <ProdutoCard
+          key={produto.id}
+          produto={produto}
+          onExcluir={handleExcluirProduto}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default PaginaInicial;
+
+
+// Exemplo de estrutura mock em produtosFake.js (src/data/produtosFake.js)
+const produtosFake = [
+  {
+    id: 'p1',
+    nome: 'Caneca Fortaleza (tipo1)',
+    preco: 30,
+    img: '/imagens/canecas/fortaleza/tipo1/caneca-fortaleza-tipo1-img1.png'
+  },
+  {
+    id: 'p2',
+    nome: 'Caneca Corinthians (tipo1)',
+    preco: 25,
+    img: '/imagens/canecas/corinthians/tipo1/caneca-corinthians-tipo1-img1.png'
+  },
+  {
+    id: 'p3',
+    nome: 'Caneca Flamengo (tipo4)',
+    preco: 27,
+    img: '/imagens/canecas/flamengo/tipo4/caneca-flamengo-tipo4-img1.png'
+  }
+];
+
+export default produtosFake;
